@@ -1,0 +1,57 @@
+{
+  "name": "eltabarani/reusable-query",
+  "description": "Reusable and modular Eloquent query filters for Laravel",
+  "type": "library",
+  "keywords": [
+    "laravel",
+    "eloquent",
+    "query",
+    "filters",
+    "reusable",
+    "reusable-query"
+  ],
+  "homepage": "https://github.com/eltabarani/reusable-query",
+  "license": "MIT",
+  "authors": [
+    {
+      "role": "Back-end Developer",
+      "name": "Ahmed El-Tabarani",
+      "email": "eltabaraniahmed@gmail.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/eltabarani/reusable-query/issues",
+    "source": "https://github.com/eltabarani/reusable-query"
+  },
+  "autoload": {
+    "psr-4": {
+      "Eltabarani\\ReusableQuery\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.0",
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5|^10.0|^11.0",
+    "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Eltabarani\\ReusableQuery\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Eltabarani\\ReusableQuery\\Providers\\ReusableQueryServiceProvider"
+      ]
+    }
+  }
+}
