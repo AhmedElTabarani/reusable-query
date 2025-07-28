@@ -4,36 +4,47 @@ declare(strict_types=1);
 
 namespace Eltabarani\ReusableQuery\Traits;
 
+use Closure;
 use Eltabarani\ReusableQuery\Contracts\ReusableQueryContract;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Scope;
 use InvalidArgumentException;
 
 trait HasReusableQuery
 {
-    public function scopeUseQuery(Builder $query, ReusableQueryContract|string $reusableQuery): Builder
+    public function scopeUseQuery(Builder $builder, ReusableQueryContract|Scope|Closure|string $queryClass, array $parameters = []): Builder
     {
-        $reusableQuery = $this->resolveReusableQuery($reusableQuery);
-        return $reusableQuery->useQuery($query);
-    }
+        $resolved = is_string($queryClass)
+            ? app()->makeWith($queryClass, $parameters)
+            : $queryClass;
 
-    public function scopeUseQueries(Builder $query, array $reusableQueries): Builder
-    {
-        foreach ($reusableQueries as $reusableQuery) {
-            $query = $this->scopeUseQuery($query, $reusableQuery);
+        if ($resolved instanceof Closure) {
+            $resolved($builder);
+            return $builder;
         }
 
-        return $query;
+        if ($resolved instanceof Scope) {
+            $resolved->apply($builder, $builder->getModel());
+            return $builder;
+        }
+
+        if ($resolved instanceof ReusableQueryContract) {
+            return $resolved->useQuery($builder);
+        }
+
+        throw new InvalidArgumentException('Invalid query type passed to useQuery().');
     }
 
-    private function resolveReusableQuery(ReusableQueryContract|string $reusableQuery): ReusableQueryContract
+    public function scopeUseQueries(Builder $builder, array $queries): Builder
     {
-        if (is_string($reusableQuery)) {
-            $reusableQuery = app()->make($reusableQuery);
-            if (!$reusableQuery instanceof ReusableQueryContract) {
-                throw new InvalidArgumentException("The provided reusable query must implement ReusableQueryContract interface.");
+        foreach ($queries as $query) {
+            if (is_array($query) && isset($query[0])) {
+                $builder = $this->scopeUseQuery($builder, $query[0], $query[1] ?? []);
+            } else {
+                $builder = $this->scopeUseQuery($builder, $query);
             }
         }
 
-        return $reusableQuery;
+        return $builder;
     }
 }
