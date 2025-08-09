@@ -14,16 +14,17 @@ use PHPUnit\Framework\TestCase;
 class ScopeTest extends TestCase
 {
     private User $model;
+
     private Builder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->model = new User();
+        $this->model = new User;
         $this->builder = $this->createMock(Builder::class);
     }
 
-    public function testScopeUseQueryWithScopeInstance(): void
+    public function test_scope_use_query_with_scope_instance(): void
     {
         $scope = $this->createMock(Scope::class);
 
@@ -40,9 +41,9 @@ class ScopeTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithActiveUsersScope(): void
+    public function test_scope_use_query_with_active_users_scope(): void
     {
-        $scope = new ActiveUsersScope();
+        $scope = new ActiveUsersScope;
 
         $this->builder->expects($this->once())
             ->method('getModel')
@@ -58,9 +59,9 @@ class ScopeTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithAdminUsersScope(): void
+    public function test_scope_use_query_with_admin_users_scope(): void
     {
-        $scope = new AdminUsersScope();
+        $scope = new AdminUsersScope;
 
         $this->builder->expects($this->once())
             ->method('getModel')
@@ -76,10 +77,10 @@ class ScopeTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithMultipleScopes(): void
+    public function test_scope_use_query_with_multiple_scopes(): void
     {
-        $scope1 = new ActiveUsersScope();
-        $scope2 = new AdminUsersScope();
+        $scope1 = new ActiveUsersScope;
+        $scope2 = new AdminUsersScope;
 
         $this->builder->expects($this->exactly(2))
             ->method('getModel')
@@ -93,6 +94,7 @@ class ScopeTest extends TestCase
                 } elseif ($field === 'role') {
                     $this->assertEquals('admin', $value);
                 }
+
                 return $this->builder;
             });
 
@@ -101,7 +103,7 @@ class ScopeTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryDoesNotModifyBuilderDirectly(): void
+    public function test_scope_use_query_does_not_modify_builder_directly(): void
     {
         $scope = $this->createMock(Scope::class);
 

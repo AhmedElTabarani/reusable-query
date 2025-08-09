@@ -12,12 +12,13 @@ use InvalidArgumentException;
 
 class ErrorHandlingTest extends TestCase
 {
-    public function testInvalidQueryTypeThrowsException(): void
+    public function test_invalid_query_type_throws_exception(): void
     {
         $this->expectException(\TypeError::class);
 
         // Create an object that doesn't implement the expected interfaces
-        $invalidQuery = new class {
+        $invalidQuery = new class
+        {
             public function someMethod(): void
             {
                 // This class doesn't implement ReusableQueryContract or Scope
@@ -27,7 +28,7 @@ class ErrorHandlingTest extends TestCase
         User::query()->useQuery($invalidQuery);
     }
 
-    public function testNonExistentClassNameThrowsException(): void
+    public function test_non_existent_class_name_throws_exception(): void
     {
         $this->expectException(BindingResolutionException::class);
         $this->expectExceptionMessage('Target class [NonExistentClassName] does not exist.');
@@ -35,7 +36,7 @@ class ErrorHandlingTest extends TestCase
         User::query()->useQuery('NonExistentClassName');
     }
 
-    public function testInvalidStringClassNameThatExistsButDoesNotImplementInterface(): void
+    public function test_invalid_string_class_name_that_exists_but_does_not_implement_interface(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid query type passed to useQuery().');
@@ -44,11 +45,12 @@ class ErrorHandlingTest extends TestCase
         User::query()->useQuery(\stdClass::class);
     }
 
-    public function testUseQueriesWithInvalidQueryInArray(): void
+    public function test_use_queries_with_invalid_query_in_array(): void
     {
         $this->expectException(\TypeError::class);
 
-        $invalidQuery = new class {
+        $invalidQuery = new class
+        {
             public function someMethod(): void
             {
                 // Invalid query type
@@ -59,15 +61,15 @@ class ErrorHandlingTest extends TestCase
             function (Builder $query) {
                 $query->where('valid', true);
             },
-            $invalidQuery // This should trigger the exception
+            $invalidQuery, // This should trigger the exception
         ]);
     }
 
-    public function testParametersPassedToInvalidQuery(): void
+    public function test_parameters_passed_to_invalid_query(): void
     {
         $this->expectException(\TypeError::class);
 
-        $invalidQuery = new \stdClass();
+        $invalidQuery = new \stdClass;
 
         User::query()->useQuery($invalidQuery, ['some' => 'parameters']);
     }

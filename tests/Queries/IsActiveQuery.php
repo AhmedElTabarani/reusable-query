@@ -12,6 +12,7 @@ class IsActiveQuery implements ReusableQueryContract
     public function useQuery(Builder $query): Builder
     {
         $query->where('is_active', true);
+
         return $query;
     }
 }

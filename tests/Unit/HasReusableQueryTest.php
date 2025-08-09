@@ -6,16 +6,14 @@ namespace Eltabarani\ReusableQuery\Tests;
 
 use Eltabarani\ReusableQuery\Contracts\ReusableQueryContract;
 use Eltabarani\ReusableQuery\Tests\Models\User;
-use Eltabarani\ReusableQuery\Traits\HasReusableQuery;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\TestCase;
 
 class HasReusableQueryTest extends TestCase
 {
-    public function testScopeUseQueryWithInstance(): void
+    public function test_scope_use_query_with_instance(): void
     {
-        $model = new User();
+        $model = new User;
         $query = $this->createMock(Builder::class);
         $reusableQuery = $this->createMock(ReusableQueryContract::class);
 
@@ -29,9 +27,9 @@ class HasReusableQueryTest extends TestCase
         $this->assertSame($query, $result);
     }
 
-    public function testScopeUseQueriesWithMultipleQueries(): void
+    public function test_scope_use_queries_with_multiple_queries(): void
     {
-        $model = new User();
+        $model = new User;
         $query = $this->createMock(Builder::class);
 
         $query1 = $this->createMock(ReusableQueryContract::class);

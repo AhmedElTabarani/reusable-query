@@ -14,10 +14,10 @@ use Eltabarani\ReusableQuery\Tests\TestCase;
 
 class ParameterTypesIntegrationTest extends TestCase
 {
-    public function testReusableQueryContractIntegration(): void
+    public function test_reusable_query_contract_integration(): void
     {
         $user = User::query()
-            ->useQuery(new IsActiveQuery())
+            ->useQuery(new IsActiveQuery)
             ->useQuery(new HasRoleQuery(['admin', 'moderator']));
 
         $expectedSql = 'select * from "users" where "is_active" = ? and "role" in (?, ?)';
@@ -27,11 +27,11 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, 'admin', 'moderator'], $bindings);
     }
 
-    public function testScopeIntegration(): void
+    public function test_scope_integration(): void
     {
         $user = User::query()
-            ->useQuery(new ActiveUsersScope())
-            ->useQuery(new AdminUsersScope());
+            ->useQuery(new ActiveUsersScope)
+            ->useQuery(new AdminUsersScope);
 
         $expectedSql = 'select * from "users" where "is_active" = ? and "role" = ?';
         $this->assertEquals($expectedSql, $user->toSql());
@@ -40,7 +40,7 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, 'admin'], $bindings);
     }
 
-    public function testClosureIntegration(): void
+    public function test_closure_integration(): void
     {
         $status = 'verified';
         $user = User::query()
@@ -56,7 +56,7 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals(['verified'], $bindings);
     }
 
-    public function testStringClassNameIntegration(): void
+    public function test_string_class_name_integration(): void
     {
         $user = User::query()
             ->useQuery(IsActiveQuery::class)
@@ -69,7 +69,7 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, 'admin'], $bindings);
     }
 
-    public function testStringClassNameWithParametersIntegration(): void
+    public function test_string_class_name_with_parameters_integration(): void
     {
         $user = User::query()
             ->useQuery(UsersByStatusQuery::class, ['status' => 'pending']);
@@ -81,16 +81,16 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals(['pending'], $bindings);
     }
 
-    public function testMixedParameterTypesIntegration(): void
+    public function test_mixed_parameter_types_integration(): void
     {
         $user = User::query()
             ->useQueries([
-                new IsActiveQuery(),
-                new ActiveUsersScope(),
+                new IsActiveQuery,
+                new ActiveUsersScope,
                 function ($query) {
                     $query->where('email_verified_at', '!=', null);
                 },
-                [HasRoleQuery::class, ['roles' => ['admin']]]
+                [HasRoleQuery::class, ['roles' => ['admin']]],
             ]);
 
         $expectedSql = 'select * from "users" where "is_active" = ? and "is_active" = ? and "email_verified_at" is not null and "role" in (?)';
@@ -100,10 +100,10 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, true, 'admin'], $bindings);
     }
 
-    public function testComplexQueryChaining(): void
+    public function test_complex_query_chaining(): void
     {
         $user = User::query()
-            ->useQuery(new IsActiveQuery())
+            ->useQuery(new IsActiveQuery)
             ->useQuery(function ($query) {
                 $query->where('created_at', '>=', '2024-01-01');
             })
@@ -118,13 +118,13 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, '2024-01-01', 'admin', 'moderator'], $bindings);
     }
 
-    public function testUseQueriesWithParametersArray(): void
+    public function test_use_queries_with_parameters_array(): void
     {
         $user = User::query()
             ->useQueries([
                 [IsActiveQuery::class, []],
                 [HasRoleQuery::class, ['roles' => ['admin', 'editor']]],
-                [UsersByStatusQuery::class, ['status' => 'verified']]
+                [UsersByStatusQuery::class, ['status' => 'verified']],
             ]);
 
         $expectedSql = 'select * from "users" where "is_active" = ? and "role" in (?, ?) and "status" = ?';
@@ -134,7 +134,7 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([true, 'admin', 'editor', 'verified'], $bindings);
     }
 
-    public function testEmptyQueriesArray(): void
+    public function test_empty_queries_array(): void
     {
         $user = User::query()->useQueries([]);
 
@@ -145,10 +145,10 @@ class ParameterTypesIntegrationTest extends TestCase
         $this->assertEquals([], $bindings);
     }
 
-    public function testQueryBuilderReturnValue(): void
+    public function test_query_builder_return_value(): void
     {
         $originalBuilder = User::query();
-        $resultBuilder = $originalBuilder->useQuery(new IsActiveQuery());
+        $resultBuilder = $originalBuilder->useQuery(new IsActiveQuery);
 
         $this->assertSame($originalBuilder, $resultBuilder);
     }

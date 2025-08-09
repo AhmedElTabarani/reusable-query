@@ -1,7 +1,32 @@
-/vendor/
+# Composer Related
 composer.lock
+/vendor
+
+# Frontend Assets
+/node_modules
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# Caches
+.phpunit.cache
 .phpunit.result.cache
-/coverage/
-.env
-.DS_Store
-Thumbs.db
+/build
+
+# IDE Helper
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Editors
+/.idea
+/.fleet
+/.vscode
+
+# Misc
+phpunit.xml
+phpstan.neon
+testbench.yaml
+/docs
+/coverage
