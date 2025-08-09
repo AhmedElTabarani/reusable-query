@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Eltabarani\ReusableQuery\Tests\Unit\ParameterTypes;
 
-use Eltabarani\ReusableQuery\Contracts\ReusableQueryContract;
 use Eltabarani\ReusableQuery\Tests\Fixtures\Scopes\ActiveUsersScope;
 use Eltabarani\ReusableQuery\Tests\Models\User;
 use Eltabarani\ReusableQuery\Tests\Queries\HasRoleQuery;
@@ -15,20 +14,21 @@ use PHPUnit\Framework\TestCase;
 class MixedParameterTypesTest extends TestCase
 {
     private User $model;
+
     private Builder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->model = new User();
+        $this->model = new User;
         $this->builder = $this->createMock(Builder::class);
     }
 
-    public function testScopeUseQueriesWithMixedParameterTypes(): void
+    public function test_scope_use_queries_with_mixed_parameter_types(): void
     {
         // Create different parameter types
-        $reusableQuery = new IsActiveQuery();
-        $scope = new ActiveUsersScope();
+        $reusableQuery = new IsActiveQuery;
+        $scope = new ActiveUsersScope;
         $closure = function (Builder $query) {
             $query->where('email_verified_at', '!=', null);
         };
@@ -45,6 +45,7 @@ class MixedParameterTypesTest extends TestCase
                     $this->assertEquals('!=', $operator);
                     $this->assertNull($value);
                 }
+
                 return $this->builder;
             });
 
@@ -58,14 +59,14 @@ class MixedParameterTypesTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueriesWithArrayParameters(): void
+    public function test_scope_use_queries_with_array_parameters(): void
     {
         $queries = [
-            new IsActiveQuery(),
+            new IsActiveQuery,
             [new HasRoleQuery(['admin', 'moderator']), []],
             function (Builder $query) {
                 $query->where('custom_field', 'custom_value');
-            }
+            },
         ];
 
         // Set up expectations - IsActiveQuery calls where, HasRoleQuery calls whereIn (won't be tested), closure calls where
@@ -77,6 +78,7 @@ class MixedParameterTypesTest extends TestCase
                 } elseif ($field === 'custom_field') {
                     $this->assertEquals('custom_value', $value);
                 }
+
                 return $this->builder;
             });
 
@@ -85,7 +87,7 @@ class MixedParameterTypesTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueriesWithEmptyArray(): void
+    public function test_scope_use_queries_with_empty_array(): void
     {
         $queries = [];
 
@@ -94,7 +96,7 @@ class MixedParameterTypesTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryExecutionOrder(): void
+    public function test_scope_use_query_execution_order(): void
     {
         $executionOrder = [];
 
@@ -117,13 +119,13 @@ class MixedParameterTypesTest extends TestCase
         $this->assertEquals(['closure1', 'closure2', 'closure3'], $executionOrder);
     }
 
-    public function testScopeUseQueryReturnsBuilderAfterEachOperation(): void
+    public function test_scope_use_query_returns_builder_after_each_operation(): void
     {
         $queries = [
-            new IsActiveQuery(),
+            new IsActiveQuery,
             function (Builder $query) {
                 $query->where('role', 'admin');
-            }
+            },
         ];
 
         $this->builder->expects($this->exactly(2))
@@ -134,6 +136,7 @@ class MixedParameterTypesTest extends TestCase
                 } elseif ($field === 'role') {
                     $this->assertEquals('admin', $value);
                 }
+
                 return $this->builder;
             });
 
@@ -142,7 +145,7 @@ class MixedParameterTypesTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryPreservesBuilderState(): void
+    public function test_scope_use_query_preserves_builder_state(): void
     {
         $initialState = ['conditions' => 'initial'];
         $this->builder->state = $initialState;

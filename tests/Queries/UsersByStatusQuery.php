@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UsersByStatusQuery implements ReusableQueryContract
 {
-    public function __construct(private string $status = 'active')
-    {
-    }
+    public function __construct(private string $status = 'active') {}
 
     public function useQuery(Builder $query): Builder
     {

@@ -20,11 +20,13 @@ trait HasReusableQuery
 
         if ($resolved instanceof Closure) {
             $resolved($builder);
+
             return $builder;
         }
 
         if ($resolved instanceof Scope) {
             $resolved->apply($builder, $builder->getModel());
+
             return $builder;
         }
 

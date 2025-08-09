@@ -14,16 +14,17 @@ use PHPUnit\Framework\TestCase;
 class ReusableQueryContractTest extends TestCase
 {
     private User $model;
+
     private Builder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->model = new User();
+        $this->model = new User;
         $this->builder = $this->createMock(Builder::class);
     }
 
-    public function testScopeUseQueryWithReusableQueryContractInstance(): void
+    public function test_scope_use_query_with_reusable_query_contract_instance(): void
     {
         $reusableQuery = $this->createMock(ReusableQueryContract::class);
 
@@ -37,9 +38,9 @@ class ReusableQueryContractTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithIsActiveQueryInstance(): void
+    public function test_scope_use_query_with_is_active_query_instance(): void
     {
-        $query = new IsActiveQuery();
+        $query = new IsActiveQuery;
 
         // Mock the builder to verify the correct method is called
         $this->builder->expects($this->once())
@@ -52,7 +53,7 @@ class ReusableQueryContractTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithHasRoleQueryInstance(): void
+    public function test_scope_use_query_with_has_role_query_instance(): void
     {
         $roles = ['admin', 'moderator'];
         $query = new HasRoleQuery($roles);
@@ -64,7 +65,7 @@ class ReusableQueryContractTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithMultipleReusableQueryInstances(): void
+    public function test_scope_use_query_with_multiple_reusable_query_instances(): void
     {
         $query1 = $this->createMock(ReusableQueryContract::class);
         $query2 = $this->createMock(ReusableQueryContract::class);
@@ -84,7 +85,7 @@ class ReusableQueryContractTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryReturnsBuilderFromReusableQuery(): void
+    public function test_scope_use_query_returns_builder_from_reusable_query(): void
     {
         $expectedBuilder = $this->createMock(Builder::class);
         $reusableQuery = $this->createMock(ReusableQueryContract::class);

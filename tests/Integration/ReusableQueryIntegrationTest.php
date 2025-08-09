@@ -73,10 +73,10 @@ class ReusableQueryIntegrationTest extends TestCase
 
     public function test_can_use_is_active_query_with_instance(): void
     {
-        $activeUsers = User::useQuery(new IsActiveQuery())->get();
+        $activeUsers = User::useQuery(new IsActiveQuery)->get();
 
         $this->assertCount(3, $activeUsers);
-        $this->assertTrue($activeUsers->every(fn($user) => $user->is_active));
+        $this->assertTrue($activeUsers->every(fn ($user) => $user->is_active));
     }
 
     public function test_can_use_is_active_query_with_class_name(): void
@@ -84,7 +84,7 @@ class ReusableQueryIntegrationTest extends TestCase
         $activeUsers = User::useQuery(IsActiveQuery::class)->get();
 
         $this->assertCount(3, $activeUsers);
-        $this->assertTrue($activeUsers->every(fn($user) => $user->is_active));
+        $this->assertTrue($activeUsers->every(fn ($user) => $user->is_active));
     }
 
     public function test_can_use_has_role_query_with_parameters(): void
@@ -92,14 +92,14 @@ class ReusableQueryIntegrationTest extends TestCase
         $adminUsers = User::useQuery(new HasRoleQuery(['admin']))->get();
 
         $this->assertCount(2, $adminUsers);
-        $this->assertTrue($adminUsers->every(fn($user) => $user->role === 'admin'));
+        $this->assertTrue($adminUsers->every(fn ($user) => $user->role === 'admin'));
     }
 
     public function test_can_use_multiple_queries_together(): void
     {
         $activeAdmins = User::useQueries([
             IsActiveQuery::class,
-            new HasRoleQuery(['admin'])
+            new HasRoleQuery(['admin']),
         ])->get();
 
         $this->assertCount(1, $activeAdmins);
@@ -117,7 +117,7 @@ class ReusableQueryIntegrationTest extends TestCase
 
         $this->assertCount(3, $adminAndManagerUsers);
         $this->assertTrue($adminAndManagerUsers->every(
-            fn($user) => in_array($user->role, ['admin', 'manager'])
+            fn ($user) => in_array($user->role, ['admin', 'manager'])
         ));
     }
 

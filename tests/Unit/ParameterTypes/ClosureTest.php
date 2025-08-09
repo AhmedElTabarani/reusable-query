@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Eltabarani\ReusableQuery\Tests\Unit\ParameterTypes;
 
-use Closure;
 use Eltabarani\ReusableQuery\Tests\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use PHPUnit\Framework\TestCase;
@@ -12,16 +11,17 @@ use PHPUnit\Framework\TestCase;
 class ClosureTest extends TestCase
 {
     private User $model;
+
     private Builder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->model = new User();
+        $this->model = new User;
         $this->builder = $this->createMock(Builder::class);
     }
 
-    public function testScopeUseQueryWithClosure(): void
+    public function test_scope_use_query_with_closure(): void
     {
         $called = false;
         $closure = function (Builder $query) use (&$called) {
@@ -40,7 +40,7 @@ class ClosureTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithComplexClosure(): void
+    public function test_scope_use_query_with_complex_closure(): void
     {
         $closure = function (Builder $query) {
             $query->where('is_active', true)
@@ -55,6 +55,7 @@ class ClosureTest extends TestCase
                 } elseif ($field === 'role') {
                     $this->assertEquals('admin', $value);
                 }
+
                 return $this->builder;
             });
 
@@ -63,7 +64,7 @@ class ClosureTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithParametricClosure(): void
+    public function test_scope_use_query_with_parametric_closure(): void
     {
         $status = 'active';
         $role = 'admin';
@@ -81,6 +82,7 @@ class ClosureTest extends TestCase
                 } elseif ($field === 'role') {
                     $this->assertEquals($role, $value);
                 }
+
                 return $this->builder;
             });
 
@@ -89,7 +91,7 @@ class ClosureTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testScopeUseQueryWithMultipleClosures(): void
+    public function test_scope_use_query_with_multiple_closures(): void
     {
         $closure1 = function (Builder $query) {
             $query->where('is_active', true);
@@ -107,6 +109,7 @@ class ClosureTest extends TestCase
                 } elseif ($field === 'role') {
                     $this->assertEquals('admin', $value);
                 }
+
                 return $this->builder;
             });
 
@@ -115,7 +118,7 @@ class ClosureTest extends TestCase
         $this->assertSame($this->builder, $result);
     }
 
-    public function testClosureReceivesCorrectBuilderInstance(): void
+    public function test_closure_receives_correct_builder_instance(): void
     {
         $receivedBuilder = null;
         $closure = function (Builder $query) use (&$receivedBuilder) {
@@ -127,7 +130,7 @@ class ClosureTest extends TestCase
         $this->assertSame($this->builder, $receivedBuilder);
     }
 
-    public function testClosureCanModifyBuilderState(): void
+    public function test_closure_can_modify_builder_state(): void
     {
         $closure = function (Builder $query) {
             $query->where('custom_field', 'custom_value');
