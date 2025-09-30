@@ -1,5 +1,9 @@
 # Laravel Reusable Query
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/eltabarani/reusable-query.svg?style=flat-square)](https://packagist.org/packages/eltabarani/reusable-query)
+[![Total Downloads](https://img.shields.io/packagist/dt/eltabarani/reusable-query.svg?style=flat-square)](https://packagist.org/packages/eltabarani/reusable-query)
+
+
 This package provides a elegant solution for creating and managing reusable query filters within Laravel applications.
 
 ---
